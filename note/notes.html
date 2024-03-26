@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notes</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: cyan;
+        }
+
+        .container {
+            text-align: center;
+            position: relative;
+        }
+
+        #heading {
+            margin-top: 20px;
+        }
+
+        .slider {
+            width: 100%;
+            overflow-x: scroll;
+            white-space: nowrap;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 10px 0;
+            -ms-overflow-style: none;
+            /* Hide scrollbar in IE and Edge */
+            scrollbar-width: none;
+            /* Hide scrollbar in Firefox */
+            border: 5px solid tomato;
+        }
+
+        .slider::-webkit-scrollbar {
+            display: none;
+            /* Hide scrollbar in Chrome, Safari, and Opera */
+        }
+
+        .card {
+            flex: 0 0 300px;
+            height: 200px;
+            margin-right: 10px;
+            background-color: tomato;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            color: #333;
+            border: 3px solid black;
+        }
+
+
+        /* Custom Scrollbar */
+        .scrollbar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background-color: #e9e9e9;
+        }
+
+        .scrollbar-progress {
+            height: 100%;
+            background-color: #888;
+            width: 0;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+        @charset "UTF-8";
+
+        *,
+        *:before,
+        *:after {
+            box-sizing: border-box;
+        }
+
+
+        .button {
+            display: inline-block;
+            padding: 15px 20px;
+            color: white;
+            background: rgb(237, 134, 116);
+            transition: background 150ms ease-out;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        .button:hover,
+        .button:active {
+            background: #ff7961;
+            transition: background 250ms ease-out;
+        }
+
+
+
+
+
+        .delete-button {
+            display: inline-block;
+            padding: 15px 20px;
+            color: white;
+            background: red;
+            transition: background 150ms ease-out;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        .delete-button:hover,
+        .delete-button:active {
+            background: #ff7961;
+            transition: background 250ms ease-out;
+        }
+
+
+
+
+
+        .modal {
+            position: fixed;
+            z-index: 20;
+            max-width: 85%;
+            width: 500px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            margin: 0 auto;
+            opacity: 1;
+            transition: margin-top 150ms ease-out, opacity 150ms ease-out;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.6);
+        }
+
+        @media screen and (max-height: 500px) {
+            .modal {
+                width: 80%;
+            }
+        }
+
+        .modal__toggler {
+            display: none;
+        }
+
+        .modal__toggler:not(:checked)~.modal {
+            position: absolute;
+            overflow: hidden;
+            clip: rect(0 0 0 0);
+            opacity: 0;
+            height: 1px;
+            width: 1px;
+            margin: -1px;
+            padding: 0;
+            border: 0;
+            margin-top: -10px;
+        }
+
+        .modal__toggler:not(:checked)~.modal__mask {
+            position: absolute;
+            overflow: hidden;
+            clip: rect(0 0 0 0);
+            opacity: 0;
+            height: 1px;
+            width: 1px;
+            margin: -1px;
+            padding: 0;
+            border: 0;
+        }
+
+        .modal__mask {
+            position: fixed;
+            height: 100%;
+            width: 100%;
+            top: 0;
+            left: 0;
+            opacity: 1;
+            transition: opacity 150ms ease-out;
+            background: RGBA(0, 0, 0, 0.7);
+            cursor: pointer;
+        }
+
+        .modal__close::after {
+            content: "✕";
+            position: absolute;
+            display: inline-block;
+            top: 10px;
+            right: 10px;
+            padding: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .modal__title {
+            margin: 0;
+            font-size: 40px;
+        }
+
+        .modal__content {
+            background: #eee;
+            padding: 30px;
+            max-height: 90vh;
+            overflow-x: auto;
+        }
+
+        .demo-button {
+            display: none;
+
+
+        }
+
+        .inputs {
+            display: inline-block;
+            padding: 15px 20px;
+            color: rgb(11, 11, 11);
+            background: white;
+            transition: background 150ms ease-out;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        .titles {
+            display: inline-block;
+            padding: 2%;
+            color: white;
+            background: tomato;
+            transition: background 150ms ease-out;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        .heading {
+            display: inline-block;
+            padding: 15px 20px;
+            color: white;
+            background: tomato;
+            transition: background 150ms ease-out;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        #heading2 {
+            text-align: left;
+        }
+    </style>
+    <script>
+
+
+        let showAddMessage = (title) => {
+
+
+
+            document.getElementsByClassName('modal__title')[0].getElementsByClassName('modal__title')[0].innerHTML = "Success!";
+            document.getElementById("Note_description").innerHTML = `Successfully added '${title}' to notes...`;
+            document.getElementById('open-modal').checked = true;
+        }
+
+        let addNote = () => {
+            event.preventDefault();
+
+            document.getElementById("delete-btn").style.display = "none";
+            document.getElementById("confirm-yes").style.display = "none";
+            document.getElementById("confirm-no").style.display = "none";
+            document.getElementById("close-btn").style.display = "";
+
+
+            let formData = new FormData(document.getElementById('form1'));
+            let noteTitle = formData.get('notetitle');
+            let noteDescription = formData.get('notedescription');
+            let cardHTML = `<div class="card" id="${noteTitle}" onclick="viewCard('${noteTitle}');">${noteTitle}</div>`;
+            let cardsOldHTML = document.getElementsByClassName('slider')[0].innerHTML;
+            document.getElementsByClassName('slider')[0].innerHTML = cardsOldHTML + cardHTML;
+            localStorage.setItem(noteTitle, noteDescription);
+
+
+            showAddMessage(noteTitle);
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+        let deleteNote = () => {
+
+            document.getElementById("delete-btn").style.display = "none";
+            document.getElementById("close-btn").style.display = "none";
+            document.getElementById("confirm-yes").style.display = "";
+            document.getElementById("confirm-no").style.display = "";
+
+
+            let noteTitle = document.getElementsByClassName('modal__title')[0].getElementsByClassName('modal__title')[0].innerHTML;
+
+
+            document.getElementsByClassName('modal__title')[0].getElementsByClassName('modal__title')[0].innerHTML = "Are you sure?";
+            document.getElementById("Note_description").innerHTML = `Pressing confirm will permanently delete '${noteTitle}'.`;
+
+            document.getElementById("confirm-yes").onclick = () => {
+                localStorage.removeItem(noteTitle);
+                document.getElementsByClassName('modal__title')[0].getElementsByClassName('modal__title')[0].innerHTML = "Success!";
+                document.getElementById("Note_description").innerHTML = `Successfully deleted '${noteTitle}' from notes...`;
+
+
+                document.getElementById("delete-btn").style.display = "none";
+                document.getElementById("close-btn").style.display = "";
+                document.getElementById("confirm-yes").style.display = "none";
+                document.getElementById("confirm-no").style.display = "none";
+
+                document.getElementsByClassName('slider')[0].innerHTML = "";
+
+                refreshCardsHTML();
+            }
+
+
+        }
+
+
+
+
+        let viewCard = (notetitle) => {
+            document.getElementById("delete-btn").style.display = "";
+            document.getElementById("close-btn").style.display = "";
+            document.getElementById("confirm-yes").style.display = "none";
+            document.getElementById("confirm-no").style.display = "none";
+            //           cardData = document.getElementById(notetitle).innerHTML;
+            titleHTML = `<h1 class="modal__title">${notetitle}</h1>`;
+            document.getElementsByClassName('modal__title')[0].innerHTML = titleHTML;
+            descHTML = `<p id="Note_description" class="Note_description">${localStorage.getItem(notetitle)}</p>`;
+            document.getElementById("Note_description").innerHTML = descHTML;
+            document.getElementById('open-modal').checked = true;
+
+        }
+    </script>
+</head>
+
+<body>
+    <div class="container">
+
+
+        <h1 class="heading" id="heading">
+            Your personal note list
+        </h1>
+        <form id="form1">
+            <label class="titles" for="notetitle">Note title:</label><br><br>
+            <input class="inputs" type="text" id="notetitle" name="notetitle" placeholder="Enter title"><br><br>
+            <label class="titles" for="notedescription">Note description:</label><br><br>
+            <input class="inputs" type="text" id="notedescription" name="notedescription"
+                placeholder="Enter description"><br><br>
+            <p><input class="button" type="submit" onclick="addNote(event); return false;" value="Add new note"></p>
+        </form>
+
+
+
+
+
+
+        <label class="demo-button" for="open-modal">Open The Modal</label>
+
+        <div class="modal__container">
+            <input type="checkbox" id="open-modal" class="modal__toggler" />
+            <label class="modal__mask" for="open-modal"></label>
+            <div class="modal">
+                <label class="modal__close" for="open-modal"></label>
+                <div class="modal__content">
+                    <h1 class="modal__title">Modal Title</h1>
+                    <p id="Note_description" class="Note_description">A</p>
+                    <label class="delete-button" id="delete-btn" onclick="deleteNote();">Delete this note</label>
+                    <label class="button" id="close-btn" for="open-modal">Close window</label>
+                    <label class="delete-button" id="confirm-yes" style="display: none;">Confirm</label>
+                    <label class="button" id="confirm-no" for="open-modal" style="display: none;">Cancel</label>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+
+        <h1 id="heading2">
+            Your notes..
+        </h1>
+        <div class="slider">
+        </div>
+        <div class="scrollbar">
+            <div class="scrollbar-progress"></div>
+        </div>
+
+    </div>
+
+    <script>
+
+
+
+
+
+
+        const refreshCardsHTML = () => {
+            const items = { ...localStorage };
+
+            let setCards = (title) => {
+                cardHTML = `<div class="card" id="${title}" onclick="viewCard('${title}');">${title}</div>`;
+                cardsOldHTML = document.getElementsByClassName('slider')[0].innerHTML;
+                document.getElementsByClassName('slider')[0].innerHTML = cardsOldHTML + cardHTML;
+            };
+
+
+
+            for (let key in items) {
+                setCards(key);
+            }
+        }
+
+        refreshCardsHTML();
+
+
+
+        const slider = document.querySelector('.slider');
+        const scrollbarProgress = document.querySelector('.scrollbar-progress');
+
+        slider.addEventListener('scroll', () => {
+            const scrollPercentage = (slider.scrollLeft / (slider.scrollWidth - slider.clientWidth)) * 100;
+            scrollbarProgress.style.width = scrollPercentage + '%';
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,96 @@
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .text1,
+        .time {
+            color: #fff;
+            text-shadow:
+                0 0 7px #fff,
+                0 0 10px #fff,
+                0 0 21px #fff,
+                0 0 42px #0fa,
+                0 0 82px #0fa,
+                0 0 92px #0fa,
+                0 0 102px #0fa,
+                0 0 151px #0fa;
+        }
+
+        /* Additional styling */
+
+        body {
+            font-size: 18px;
+            font-family: "Vibur", sans-serif;
+            background-color: #010a01;
+        }
+
+        p,
+        p1 {
+            text-align: center;
+            font-weight: 400;
+        }
+
+        p {
+            font-size: 4.2rem;
+        }
+
+        p1 {
+            font-size: 4.0rem;
+        }
+
+        .container {
+            margin-top: 20vh;
+        }
+
+        .container2 {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .hr1,
+        .hr2 {
+            width: 80%;
+            margin: 10px 0;
+        }
+
+        .time {
+            margin: 10px 0;
+        }
+    </style>
+
+
+    <script>
+        setInterval(fun = () => {
+            let dates = new Date();
+            let h = dates.getHours();
+            h = h < 10 ? "0" + h : h;
+            let m = dates.getMinutes();
+            m = m < 10 ? "0" + m : m;
+            let s = dates.getSeconds();
+            s = s < 10 ? "0" + s : s;
+            time_str = `${h}:${m}:${s}`
+            document.getElementsByClassName("time")[0].innerHTML = time_str
+        }, 1000);
+
+
+    </script>
+
+    <title>Digital clock</title>
+</head>
+
+<body>
+    <div class="container">
+        <p class="text1"><b>Digital clock</b></p>
+        <br>
+        <div class="container2">
+            <hr class="hr1">
+            <p1 class="time">00:00:00</p1>
+            <hr class="hr2">
+        </div>
+    </div>
+</body>
+
+</html>

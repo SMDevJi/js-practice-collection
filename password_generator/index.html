@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password generator</title>
+    <style>
+        html {
+            height: 100%;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: sans-serif;
+            background: linear-gradient(#141e30, #243b55);
+        }
+
+        .container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 400px;
+            padding: 40px;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, .5);
+            box-sizing: border-box;
+            box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container h2 {
+            margin: 0 0 30px;
+            padding: 0;
+            color: #fff;
+            text-align: center;
+        }
+
+
+
+
+        .container h3 {
+            margin: 0 0 20px;
+            padding: 0;
+            color: #fff;
+            text-align: center;
+        }
+
+
+
+
+
+
+        .container select {
+            position: relative;
+            display: inline-block;
+            padding: 5px 5px;
+            color: #000a0a;
+            font-size: 15px;
+            text-decoration: none;
+            text-transform: uppercase;
+            overflow: hidden;
+            transition: .5s;
+            letter-spacing: 4px;
+        }
+
+
+
+        .container .pass {
+            position: relative;
+            display: inline-block;
+            padding: 10px 20px;
+            color: #03e9f4;
+            font-size: 16px;
+            text-decoration: none;
+            overflow: hidden;
+            transition: .5s;
+            margin-top: 40px;
+            letter-spacing: 4px;
+            text-align: center;
+        }
+
+
+
+        .container .pass span {
+            position: absolute;
+            display: block;
+        }
+
+
+
+
+
+
+
+        .container button {
+            position: relative;
+            display: inline-block;
+            padding: 10px 20px;
+            color: #000000;
+            font-size: 16px;
+            text-decoration: none;
+            text-transform: uppercase;
+            overflow: hidden;
+            transition: .5s;
+            margin-top: 10px;
+            letter-spacing: 4px
+        }
+
+        .container button:hover {
+            background: #06d1dc;
+            color: black;
+            border-radius: 5px;
+            box-shadow: 0 0 5px #044b4f,
+                0 0 25px #03e9f4,
+                0 0 50px #03e9f4,
+                0 0 100px #03e9f4;
+        }
+
+
+
+        .notification {
+            display: none;
+            background: #03e9f4;
+            color: #000000;
+            padding: 10px 20px;
+            margin-top: 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .show-notification {
+            display: block;
+        }
+    </style>
+    <script>
+        var absolutePass = "";
+        var upperCases = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+        var lowerCases = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+        var specialCharacters = ['!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', '-', '=', '{', '}', '[', ']', ':', ';', '<', '>', '?', ',', '.'];
+
+        function getRandomChar(charType) {
+            if (charType == 'upper') {
+                let randomIndex = Math.floor(Math.random() * upperCases.length);
+                const randomUpperChar = upperCases[randomIndex];
+                return randomUpperChar
+            }
+            else if (charType == 'lower') {
+                let randomIndex = Math.floor(Math.random() * lowerCases.length);
+                const randomLowerChar = lowerCases[randomIndex];
+                return randomLowerChar
+            }
+            else {
+
+                let randomIndex = Math.floor(Math.random() * specialCharacters.length);
+                const randomSpecialChar = specialCharacters[randomIndex];
+                return randomSpecialChar
+            }
+        }
+
+
+
+        function hasRequiredCharacters(str) {
+            const hasLowercase = /[a-z]/.test(str);
+            const hasUppercase = /[A-Z]/.test(str);
+            const hasSpecialChar = /[!@#$%^&*()_+\-={}\[\]:;<>,.?]/.test(str);
+
+            return hasLowercase && hasUppercase && hasSpecialChar;
+        }
+
+
+
+
+
+
+
+
+        class Password {
+            constructor() {
+                this.pass_type = document.getElementById('pass_type').value;
+            }
+
+
+
+
+
+
+
+
+            getPassword = () => {
+                if (this.pass_type == 'Funny') {
+                    let funny_passwords = ['password', 'ilovefootball', 'abc123', '12345678', 'messi123', 'lemon', 'cupcakes'];
+                    let pass_index = Math.floor(Math.random() * (funny_passwords.length - 1) + 0);
+                    return funny_passwords[pass_index];
+                }
+
+                else if (this.pass_type == 'Weak') {
+                    let pass_length = 8
+                    let caseTypes = ['upper', 'lower']
+                    let finalPass = ''
+                    let caseTypeIndex = Math.floor(Math.random() * 2);
+                    for (let i = 1; i <= pass_length; i++) {
+
+                        let caseType = caseTypes[caseTypeIndex];
+                        let passChar = getRandomChar(caseType);
+                        finalPass += passChar;
+                    }
+                    return finalPass
+                }
+
+                else if (this.pass_type == 'Strong') {
+                    let pass_length = Math.floor(Math.random() * (12) + 8);
+                    let caseTypes = ['upper', 'lower', 'special']
+                    let finalPass = ''
+                    for (let i = 1; i <= pass_length; i++) {
+                        let caseTypeIndex = Math.floor(Math.random() * 3);
+                        let caseType = caseTypes[caseTypeIndex];
+                        let passChar = getRandomChar(caseType);
+                        finalPass += passChar;
+                    }
+                    return finalPass
+                }
+
+            }
+
+            displayPassword = (password) => {
+                absolutePass = password;
+                document.getElementById('copy_btn').style.display = "";
+                document.getElementById('pass').innerHTML = `Your generated password is....<br><br>${password}`;
+            }
+
+
+
+
+
+        }
+
+
+        const getPass = () => {
+            pass_obj = new Password();
+
+            if (pass_obj.pass_type == 'Strong') {
+                do {
+                    final_password = pass_obj.getPassword();
+                }
+                while (!hasRequiredCharacters(final_password))
+
+                pass_obj.displayPassword(final_password);
+            }
+            else {
+                final_password = pass_obj.getPassword();
+                pass_obj.displayPassword(final_password);
+            }
+
+
+
+
+        }
+
+
+
+        function copyToClipbord() {
+            const el = document.createElement('textarea');
+            el.value = absolutePass;
+            el.setAttribute('readonly', '');
+            el.style.position = 'absolute';
+            el.style.left = '-9999px';
+            document.body.appendChild(el);
+
+            el.select();
+            el.setSelectionRange(0, 99999);
+
+            document.execCommand('copy');
+            document.body.removeChild(el);
+            const notification = document.getElementById('notification');
+            notification.classList.add('show-notification');
+            setTimeout(function () {
+                notification.classList.remove('show-notification');
+            }, 600);
+        }
+
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <input type="text" value="Hello" id="myInput" style="display: none;">
+        <h2>Generate password as you like.</h2>
+        <label for="pass_type">
+            <h3>Select password type:</h3>
+        </label>
+        <br>
+        <select name="pass_type" id="pass_type" class="pass_type">
+            <option value="Strong">Strong</option>
+            <option value="Weak">Weak</option>
+            <option value="Funny">Funny</option>
+        </select>
+        <br>
+        <button id="button" onclick="getPass();">
+
+            <span></span>Generate</button>
+        <div class="pass" id="pass">
+
+        </div>
+        <button id="copy_btn" onclick="copyToClipbord()" style="display: none;">Copy</button>
+        <div id="notification" class="notification">
+            Password copied!
+        </div>
+    </div>
+</body>
+
+</html>
